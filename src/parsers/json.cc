@@ -204,13 +204,14 @@ void from_json(const nlohmann::json& json, Graphics::Geometry& geometry) {
   }
   geometry.type = json.at("type").get<Graphics::Geometry::Type>();
   switch (geometry.type) {
-    case Graphics::Geometry::Type::kBox:
+    case Graphics::Geometry::Type::kBox: {
       if (!json.count("scale")) {
         throw std::runtime_error("from_json(const nlohmann::json&, SpatialInertiad&): 'scale' field missing.\n" + json.dump());
       }
       auto scale_vec = json.at("scale").get<std::vector<double>>();
       geometry.scale = Eigen::Vector3d(scale_vec[0], scale_vec[1], scale_vec[2]);
       break;
+    }
     case Graphics::Geometry::Type::kCapsule:
     case Graphics::Geometry::Type::kCylinder:
       if (!json.count("radius")) {
@@ -228,7 +229,7 @@ void from_json(const nlohmann::json& json, Graphics::Geometry& geometry) {
       }
       geometry.radius = json.at("radius").get<double>();
       break;
-    case Graphics::Geometry::Type::kMesh:
+    case Graphics::Geometry::Type::kMesh: {
       if (json.count("scale")) {
         auto scale_vec = json.at("scale").get<std::vector<double>>();
         geometry.scale = Eigen::Vector3d(scale_vec[0], scale_vec[1], scale_vec[2]);
@@ -238,6 +239,7 @@ void from_json(const nlohmann::json& json, Graphics::Geometry& geometry) {
       }
       geometry.mesh = json.at("mesh").get<std::string>();
       break;
+    }
     default:
       break;
   }
