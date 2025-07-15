@@ -141,12 +141,14 @@ void from_json(const nlohmann::json& json, SpatialInertiad& inertia) {
   if (!json.count("com")) {
     throw std::runtime_error("from_json(const nlohmann::json&, SpatialInertiad&): 'com' field missing.\n" + json.dump());
   }
-  const Eigen::Vector3d com = json.at("com").get<Eigen::Vector3d>();
+  auto com_vec = json.at("com").get<std::vector<double>>();
+  Eigen::Vector3d com(com_vec[0], com_vec[1], com_vec[2]);
 
   if (!json.count("I_com_flat")) {
     throw std::runtime_error("from_json(const nlohmann::json&, SpatialInertiad&): 'I_com_flat' field missing.\n" + json.dump());
   }
-  const Eigen::Vector6d I_com_flat = json.at("I_com_flat").get<Eigen::Vector6d>();
+  auto vec = json.at("I_com_flat").get<std::vector<double>>();
+  Eigen::Vector6d I_com_flat(vec.data());
 
   inertia = spatial_dyn::SpatialInertiad(mass, com, I_com_flat);
 }
@@ -206,7 +208,8 @@ void from_json(const nlohmann::json& json, Graphics::Geometry& geometry) {
       if (!json.count("scale")) {
         throw std::runtime_error("from_json(const nlohmann::json&, SpatialInertiad&): 'scale' field missing.\n" + json.dump());
       }
-      geometry.scale = json.at("scale").get<Eigen::Vector3d>();
+      auto scale_vec = json.at("scale").get<std::vector<double>>();
+      geometry.scale = Eigen::Vector3d(scale_vec[0], scale_vec[1], scale_vec[2]);
       break;
     case Graphics::Geometry::Type::kCapsule:
     case Graphics::Geometry::Type::kCylinder:
@@ -227,7 +230,8 @@ void from_json(const nlohmann::json& json, Graphics::Geometry& geometry) {
       break;
     case Graphics::Geometry::Type::kMesh:
       if (json.count("scale")) {
-        geometry.scale = json.at("scale").get<Eigen::Vector3d>();
+        auto scale_vec = json.at("scale").get<std::vector<double>>();
+        geometry.scale = Eigen::Vector3d(scale_vec[0], scale_vec[1], scale_vec[2]);
       }
       if (!json.count("mesh")) {
         throw std::runtime_error("from_json(const nlohmann::json&, SpatialInertiad&): 'mesh' field missing.\n" + json.dump());
@@ -258,7 +262,8 @@ void from_json(const nlohmann::json& json, Graphics::Material& material) {
     material.name = json.at("name").get<std::string>();
   }
   if (json.count("rgba")) {
-    material.rgba = json.at("rgba").get<Eigen::Vector4d>();
+    auto rgba_vec = json.at("rgba").get<std::vector<double>>();
+    material.rgba = Eigen::Vector4d(rgba_vec[0], rgba_vec[1], rgba_vec[2], rgba_vec[3]);
   }
   if (json.count("texture")) {
     material.texture = json.at("texture").get<std::string>();
