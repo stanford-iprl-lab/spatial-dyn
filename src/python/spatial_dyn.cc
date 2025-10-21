@@ -199,15 +199,18 @@ PYBIND11_MODULE(spatialdyn, m) {
           },
           "i"_a, "q"_a = py::none())
       .def(
-          "T_to_world",
-          [](const ArticulatedBody& ab, int i,
-             py::object q) -> Eigen::Isometry3d {
-            return q.is_none()
-                       ? ab.T_to_world(i)
-                       : ab.T_to_world(
-                             i, q.cast<Eigen::Ref<const Eigen::VectorXd>>());
-          },
-          "i"_a, "q"_a = py::none())
+        "T_to_world",
+        [](const ArticulatedBody& ab, int i, py::object q) -> py::array_t<double> {
+            Eigen::Isometry3d transform;
+            
+            if (q.is_none()) {
+                transform = ab.T_to_world(i);
+            } else {
+                transform = ab.T_to_world(i, q.cast<Eigen::Ref<const Eigen::VectorXd>>());
+            }
+            return py::cast(transform.matrix());
+        },
+        "i"_a, "q"_a = py::none())
       .def(
           "T_from_world",
           [](const ArticulatedBody& ab, int i,
