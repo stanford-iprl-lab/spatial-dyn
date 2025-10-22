@@ -392,7 +392,7 @@ PYBIND11_MODULE(spatialdyn, m) {
           "q"_a = py::none())
       .def(
           "jacobian",
-          [](const ArticulatedBody& ab, int link, const Eigen::Vector3d& offset,
+          [](const ArticulatedBody& ab, int link, Eigen::Ref<const Eigen::Vector3d> offset,
              py::object q) -> Eigen::Matrix6Xd {
             return q.is_none()
                        ? Jacobian(ab, link, offset)
@@ -401,10 +401,11 @@ PYBIND11_MODULE(spatialdyn, m) {
                                   link, offset);
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
-          "q"_a = py::none())
+          "q"_a = py::none(),
++          py::return_value_policy::copy)
       .def(
           "linear_jacobian",
-          [](const ArticulatedBody& ab, int link, const Eigen::Vector3d& offset,
+          [](const ArticulatedBody& ab, int link, Eigen::Ref<const Eigen::Vector3d> offset,
              py::object q) -> Eigen::Matrix3Xd {
             return q.is_none()
                        ? Eigen::Matrix3Xd(LinearJacobian(ab, link, offset))
@@ -413,10 +414,11 @@ PYBIND11_MODULE(spatialdyn, m) {
                              link, offset);
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
-          "q"_a = py::none())
+          "q"_a = py::none(),
++          py::return_value_policy::copy)
       .def(
           "angular_jacobian",
-          [](const ArticulatedBody& ab, int link, const Eigen::Vector3d& offset,
+          [](const ArticulatedBody& ab, int link, Eigen::Ref<const Eigen::Vector3d> offset,
              py::object q) -> Eigen::Matrix3Xd {
             return q.is_none()
                        ? Eigen::Matrix3Xd(AngularJacobian(ab, link))
@@ -425,7 +427,8 @@ PYBIND11_MODULE(spatialdyn, m) {
                              link);
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
-          "q"_a = py::none())
+          "q"_a = py::none(),
++          py::return_value_policy::copy)
       .def(
           "hessian",
           [](const ArticulatedBody& ab, int link,
