@@ -402,7 +402,7 @@ PYBIND11_MODULE(spatialdyn, m) {
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
           "q"_a = py::none(),
-+          py::return_value_policy::copy)
+          py::return_value_policy::copy)
       .def(
           "linear_jacobian",
           [](const ArticulatedBody& ab, int link, Eigen::Ref<const Eigen::Vector3d> offset,
@@ -415,7 +415,7 @@ PYBIND11_MODULE(spatialdyn, m) {
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
           "q"_a = py::none(),
-+          py::return_value_policy::copy)
+          py::return_value_policy::copy)
       .def(
           "angular_jacobian",
           [](const ArticulatedBody& ab, int link, Eigen::Ref<const Eigen::Vector3d> offset,
@@ -428,7 +428,7 @@ PYBIND11_MODULE(spatialdyn, m) {
           },
           "ab"_a, "link"_a = -1, "offset"_a = Eigen::Vector3d::Zero(),
           "q"_a = py::none(),
-+          py::return_value_policy::copy)
+          py::return_value_policy::copy)
       .def(
           "hessian",
           [](const ArticulatedBody& ab, int link,
